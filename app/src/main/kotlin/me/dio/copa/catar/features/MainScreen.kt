@@ -1,6 +1,7 @@
 package me.dio.copa.catar.features
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,22 +32,24 @@ import me.dio.copa.catar.domain.model.MatchDomain
 import me.dio.copa.catar.domain.model.TeamDomain
 import me.dio.copa.catar.ui.theme.Shapes
 
+typealias NotificationOnClick = (match:MatchDomain) -> Unit
+
 @Composable
-fun MainScreen(matches: List<MatchDomain>) {
+fun MainScreen(matches: List<MatchDomain>, onNotificationClick: NotificationOnClick) {
     Box(modifier = Modifier
         .fillMaxSize()
         .padding(8.dp)
     ) {
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(matches){match ->
-                MatchInfo(match)
+                MatchInfo(match,onNotificationClick)
             }
         }
     }
 }
 
 @Composable
-fun MatchInfo(match: MatchDomain) {
+fun MatchInfo(match: MatchDomain, onNotificationClick: NotificationOnClick) {
     Card(
         shape = Shapes.large,
         modifier = Modifier.fillMaxWidth()
@@ -60,7 +63,7 @@ fun MatchInfo(match: MatchDomain) {
             )
 
             Column(modifier = Modifier.padding(16.dp)) {
-                Notification(match)
+                Notification(match, onNotificationClick)
                 Title(match)
                 Teams(match)
             }
@@ -69,7 +72,7 @@ fun MatchInfo(match: MatchDomain) {
 }
 
 @Composable
-fun Notification (match: MatchDomain){
+fun Notification (match: MatchDomain, onClick: NotificationOnClick ){
     Row (
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.End
@@ -79,6 +82,9 @@ fun Notification (match: MatchDomain){
 
         Image(
             painter = painterResource(id =drawable ),
+            modifier = Modifier.clickable {
+                        onClick(match)
+            },
             contentDescription = null
         )
     }
